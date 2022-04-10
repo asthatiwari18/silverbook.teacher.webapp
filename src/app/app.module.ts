@@ -4,9 +4,13 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms'
 import { QRCodeModule } from 'angular2-qrcode';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -16,9 +20,13 @@ import { QRCodeModule } from 'angular2-qrcode';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    QRCodeModule
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    QRCodeModule,
+    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

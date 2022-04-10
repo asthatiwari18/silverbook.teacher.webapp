@@ -12,22 +12,23 @@ export class AppComponent {
   public qrdata: string = null;
   public level: "L" | "M" | "Q" | "H";
   public width: number;
-
+  public qrcode: string = null
+  public subject: string = null
+  public data = [{
+    'subject': 'LAL',
+    'date': '2016-01-01',
+    'classNumber': '2',
+    'secret': '123'
+  }]
   constructor() {
-    this.level = "M";
-    this.qrdata = "Initial QR code data string";
+    this.level = "H";
+    this.qrcode = JSON.stringify(this.data)
     this.width = 256;
   }
 
-  changeLevel(newValue: "L" | "M" | "Q" | "H"): void {
-    this.level = newValue;
-  }
 
   changeQrdata(newValue: string): void {
-    this.qrdata = newValue;
+    this.qrcode = newValue+"123";
   }
 
-  changeWidth(newValue: number): void {
-    this.width = newValue;
-  }
 }
