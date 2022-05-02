@@ -1,3 +1,20 @@
-.flexContainer {
-    display: flex;
+.container{
+  display: flex;
+}
+.qr{
+  margin-left: 100px;
+  width: 50%;
+}
+.qrDataForm{
+  width:  50%;
+}
+.qr, .qrDataForm{display: inline-block; *display: inline;}
+
+
+.mat-vertical-stepper {
+  margin-top: 8px;
+}
+
+.mat-form-field {
+  margin-top: 16px;
 }

@@ -1,38 +1,53 @@
-<h2>Generate QR-Code in Angular Application</h2>
-<div class="flexContainer">
-  <div>
-    <div>
-      <qr-code [value]="qrcode" [size]="width" [level]="level"></qr-code>
-    </div>
-  </div>
-<form #loginForm="ngForm" ></form>
-      <mat-form-field>
-      <input matInput placeholder="subject" [(ngModel)]="subject" name="subject" required>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="subject" [(ngModel)]="subject" name="subject" required>
-    </mat-form-field><mat-form-field appearance="fill" class="example-form-field">
-      <mat-label>Choose a date</mat-label>
-      <input matInput [matDatepicker]="datepicker">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-      <mat-datepicker #datepicker>
-        <mat-datepicker-actions>
-          <button mat-button matDatepickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-        </mat-datepicker-actions>
-      </mat-datepicker>
-    </mat-form-field>
+<mat-toolbar color="primary">
+  <span>Generate QR-Code</span>
+</mat-toolbar>
+
+ <div class="container">
+
+ <div class="qrDataForm">
     
-  <div>
+ 
+  <mat-vertical-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Enter Subject</ng-template>
+      <mat-form-field appearance="fill">
+        <mat-label>Subject</mat-label>
+        <input matInput placeholder="Subject" formControlName="firstCtrl" [(ngModel)]="subject" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup" label="Select Date">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="secondCtrl"  required>
+        <mat-datepicker-toggle matSuffix [for]="picker" required></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Submit</ng-template>
+    <p>Submit.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button  mat-button (click)="changeQrdata(subject)">Generate QR</button>
+    </div>
+  </mat-step>
 
-    <label>
-      or type to change: <input [(ngModel)]="qrdata" placeholder="name" />
-      <button (click)="changeQrdata(qrdata)">
-      Set "Peter Parker"
-    </button>
-      
-    </label>
-
-  </div>
+</mat-vertical-stepper>
 </div>
+<div class = "qr" *ngIf = "isShow">
+  <qr-code [value]="qrcode" [size]="width" [level]="level"></qr-code>
+  <button id="submit" mat-button (click)="everyTime()">Generate QR</button>
+</div>
+</div>
+
