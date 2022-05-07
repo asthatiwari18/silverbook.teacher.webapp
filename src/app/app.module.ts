@@ -14,17 +14,21 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatStepperModule} from '@angular/material/stepper';
+import { HttpClientModule } from '@angular/common/http';
+import { AttendenceViewerComponent } from './attendence-viewer/attendence-viewer.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AttendenceViewerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     MatButtonModule,
     MatInputModule,
     MatDatepickerModule,

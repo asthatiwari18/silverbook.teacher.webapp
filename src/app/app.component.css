@@ -2,6 +2,7 @@
   display: flex;
 }
 .qr{
+  margin-top: 100px;
   margin-left: 100px;
   width: 50%;
 }
@@ -12,9 +13,14 @@
 
 
 .mat-vertical-stepper {
-  margin-top: 8px;
+  margin-top: 2px;
 }
 
 .mat-form-field {
-  margin-top: 16px;
+  margin-top: 10px;
+}
+
+.deleteBtn{
+  margin-top: 30px;
+  margin-left: 80px;
 }
