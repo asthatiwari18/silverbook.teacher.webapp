@@ -15,15 +15,21 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatStepperModule} from '@angular/material/stepper';
 import { HttpClientModule } from '@angular/common/http';
-import { AttendenceViewerComponent } from './attendence-viewer/attendence-viewer.component';
+import { AttendenceViewerComponent } from './attendance-viewer/attendance-viewer.component';
+import { QrGeneratorComponent } from './qr-generator/qr-generator.component';
+import {MatTableModule,MatTableDataSource} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 
 @NgModule({
+
   declarations: [
     AppComponent,
-    AttendenceViewerComponent
+    AttendenceViewerComponent,
+    QrGeneratorComponent
   ],
   imports: [
+    MatTableModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
@@ -36,7 +42,9 @@ import { AttendenceViewerComponent } from './attendence-viewer/attendence-viewer
     MatStepperModule,
     QRCodeModule,
     BrowserAnimationsModule,
-    MatToolbarModule
+    MatToolbarModule,
+     
+    // MatPaginatorModule
   ],
   providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]
