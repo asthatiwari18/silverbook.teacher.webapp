@@ -94,7 +94,7 @@
     
   </div>
 
-  <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="isShowTable" >
 
     <ng-container *ngFor="let disCol of displayedColumns; let colIndex = index" matColumnDef="{{disCol}}">
         <mat-header-cell *matHeaderCellDef>{{disCol}}</mat-header-cell>
@@ -102,7 +102,7 @@
         </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns" ></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
  

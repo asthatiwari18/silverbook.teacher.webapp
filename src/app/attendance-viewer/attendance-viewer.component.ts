@@ -21,6 +21,7 @@ export class AttendenceViewerComponent implements OnInit {
   public college: string = null;
   public branch: string = null;
   public semester: string = null;
+  public isShowTable: boolean =false;
   private backendurl: string = 'https://mysterious-wave-81851.herokuapp.com';
   constructor(private _formBuilder: FormBuilder, private http: HttpClient) {
     this.dataSource = new MatTableDataSource();
@@ -87,8 +88,20 @@ export class AttendenceViewerComponent implements OnInit {
         console.log(response.body);
         var json = JSON.stringify(response.body);
         this.prepareData(response.body);
-      })
-      .catch(console.log);
+        console.log("beforeIsShow");
+        this.isShowTable=true;
+        console.log("afterIsShow");
+      },
+      (error)=>{
+        this.handleError(error)
+      }
+      )
+      .catch(this.handleError);
+  }
+
+  handleError(error: Error){
+   this.isShowTable=false
+   console.log(error)
   }
 
   viewAttendance() {
