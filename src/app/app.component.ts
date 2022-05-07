@@ -2,7 +2,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import $ from 'jquery';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +15,10 @@ export class AppComponent {
   public qrdata: string = null;
   public level: 'L' | 'M' | 'Q' | 'H';
   public width: number;
-  private backendurl: string = 'http://localhost:3000';
-  //https://afternoon-earth-49751.herokuapp.com
+  private backendurl: string = 'https://afternoon-earth-49751.herokuapp.com'
   isLinear = true;
-  isShow = false;
+  isShowQR = false;
+  isShowError = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   collegeFormGroup: FormGroup;
@@ -26,6 +26,7 @@ export class AppComponent {
   semFormGroup: FormGroup;
   classNoFormGroup: FormGroup;
 
+  public errorOccured: boolean = false;
   public qrcode: string = null;
   public subject: string = null;
   public college: string = null;
@@ -71,52 +72,99 @@ export class AppComponent {
     });
   }
 
-  changeOTP() {
-    let r = Math.floor(Math.random() * 10000);
-    this.qrData['otp'] = r.toString();
-    this.otp= r.toString();
+  showError(response: any){
+    this.isShowQR = false;
+    this.isShowError=true;
+    this.errorOccured=true;
+    clearInterval(this.myInterval);
+    console.log(response.error)
+    var errorDiv = document.getElementById("errorMessage");
+    errorDiv.innerHTML = "<h3>"+response.error+"</h3>";
+  }
 
+  deleteError(){
+    this.errorOccured=false;
+    var errorDiv = document.getElementById("errorMessage");
+    errorDiv.innerHTML = "";
+  }
 
-    const d = new Date();
-    this.qrData['qrGenTime'] = d.getTime();
-    this.qrcode = JSON.stringify(this.qrData);
+  updateOTPInDB(){
+    // console.log("start",Date.now())
     let body = new URLSearchParams();
     body.set('college', this.college);
     body.set('branch', this.branch);
     body.set('faculty', 'DABB');
-    body.set('date', this.date.toString());
+    body.set('date', formatDate(this.date, 'dd-MM-yyyy', 'en-US'));
     body.set('classCount', this.classNumber);
     body.set('subject', this.subject);
     body.set('semester', this.semester);
-    console.log("body = ",body)
-    let head = new HttpHeaders();
 
     let options = {
       headers: new HttpHeaders().set('QROTP', this.otp)
       .set('Content-Type', 'application/x-www-form-urlencoded')
-
-      .set('responseType', 'text')
       .set('Accept', 'text/plain')
       , responseType: 'text' as 'json'
     };
 
-    this.http.put<String>('http://localhost:4000/faculty/qr',body.toString(),options)
+    this.http.put<string>(this.backendurl+'/faculty/qr',body.toString(),options)
     .subscribe(response=>{
-      console.log(response, body.toString())
+      if(response!=="QR Updated"){
+        this.showError(response)
+        
+      }
+      // console.log("end",Date.now())
+    }
+    ,
+    error => {
+      this.showError(error)
     })
+    
+  }
+  // start 1651941060313
+  //   end 1651941061336
+  // Function to generate OTP
+generateOTP() {
+          
+  // Declare a string variable 
+  // which stores all string
+  var string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let OTP = '';
+    
+  // Find the length of string
+  var len = string.length;
+  for (let i = 0; i < 15; i++ ) {
+      OTP += string[Math.floor(Math.random() * len)];
+  }
+  return OTP;
+}
 
+  changeOTP() {
+    this.otp=this.generateOTP();
+    this.qrData['otp'] = this.otp;
+    this.updateOTPInDB()
+    const d = new Date();
+    this.qrData['qrGenTime'] = d.getTime();
+    this.qrcode = JSON.stringify(this.qrData);
     console.log(this.qrData);
   }
 
   everyTime() {
     document.getElementById('submit').click();
+  }
 
+  sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
   }
 
   changeQrdata() {
+    this.deleteError();
     this.qrData['subject'] = this.subject;
     this.qrData['college'] = this.college;
-    this.qrData['date'] = this.date;
+    this.qrData['date'] = formatDate(this.date, 'dd-MM-yyyy', 'en-US');
     this.qrData['classNumber'] = this.classNumber;
     let r = Math.floor(Math.random() * 10000);
     this.qrData['otp'] = r.toString();
@@ -124,12 +172,19 @@ export class AppComponent {
     const d = new Date();
     this.qrData['qrGenTime'] = d.getTime();
     this.qrcode = JSON.stringify(this.qrData);
-    this.isShow = true;
-    this.myInterval = setInterval(this.everyTime, 5000);
+    this.updateOTPInDB()
+    this.sleep(1000)
+    if(!this.errorOccured){
+    this.isShowQR = true;
+    this.myInterval = setInterval(this.everyTime, 5000)};
   }
 
   deleteQR() {
-    this.isShow = false;
+    this.deleteError();
+    this.isShowQR = false;
+    this.isShowError=false;
+    console.log("deleted QR")
+    this.everyTime()
     clearInterval(this.myInterval);
   }
 }
