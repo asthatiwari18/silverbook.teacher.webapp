@@ -1,0 +1,113 @@
+<mat-toolbar color="primary">
+  <span>View Attendance</span>
+</mat-toolbar>
+
+<div class="container">
+  <div class="qrDataForm">
+    <mat-horizontal-stepper [linear]="true" #stepper>
+      <mat-step [stepControl]="collegeFormGroup">
+        <form [formGroup]="collegeFormGroup">
+          <ng-template matStepLabel>Enter College</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>College</mat-label>
+            <input
+              matInput
+              placeholder="College"
+              formControlName="collegeCtrl"
+              [(ngModel)]="college"
+              required
+            />
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="branchFormGroup">
+        <form [formGroup]="branchFormGroup">
+          <ng-template matStepLabel>Enter Branch</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>Branch</mat-label>
+            <input
+              matInput
+              placeholder="Branch"
+              formControlName="branchCtrl"
+              [(ngModel)]="branch"
+              required
+            />
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="semFormGroup">
+        <form [formGroup]="semFormGroup">
+          <ng-template matStepLabel>Enter Semester</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>Semester</mat-label>
+            <input
+              matInput
+              placeholder="Sem"
+              formControlName="semCtrl"
+              [(ngModel)]="semester"
+              required
+            />
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Enter Subject</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>Subject</mat-label>
+            <input
+              matInput
+              placeholder="Subject"
+              formControlName="subCtrl"
+              [(ngModel)]="subject"
+              required
+            />
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Submit</ng-template>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="viewAttendance()">View Attendance</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+
+  <mat-table
+    #table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8"
+    *ngIf="isShowTable"
+  >
+    <ng-container
+      *ngFor="let disCol of displayedColumns; let colIndex = index"
+      matColumnDef="{{ disCol }}"
+    >
+      <mat-header-cell *matHeaderCellDef>{{ disCol }}</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element[disCol] }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <div id="errorMessage"></div>
+</div>
