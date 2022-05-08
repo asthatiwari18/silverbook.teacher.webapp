@@ -23,6 +23,8 @@
     "@angular/router": "~11.2.14",
     "angular2-qrcode": "^2.0.3",
     "angularx-qrcode": "^10.0.6",
+    "angularx-social-login": "^4.1.0",
+    "bootstrap": "^4.5.0",
     "jquery": "^3.6.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

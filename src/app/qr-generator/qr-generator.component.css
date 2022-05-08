@@ -1,31 +1,37 @@
-.container{
-    display: flex;
-  }
-  .qr{
-    margin-top: 100px;
-    margin-left: 100px;
-    width: 50%;
-  }
-  .qrDataForm{
-    width:  50%;
-  }
-  .qr, .qrDataForm{display: inline-block; *display: inline;}
-  
-  
-  .mat-vertical-stepper {
-    margin-top: 2px;
-  }
-  
-  .mat-form-field {
-    margin-top: 10px;
-  }
-  
-  .deleteBtn{
-    margin-top: 30px;
-    margin-left: 80px;
-  }
-  
-  #errorMessage{
-    margin-top: 100px;
-    text-align: center;
-  }
+.container {
+  display: flex;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+.qr {
+  margin-top: 100px;
+  margin-left: 100px;
+  width: 50%;
+}
+.qrDataForm {
+  width: 50%;
+}
+.qr,
+.qrDataForm {
+  display: inline-block;
+  *display: inline;
+}
+
+.mat-vertical-stepper {
+  margin-top: 2px;
+}
+
+.mat-form-field {
+  margin-top: 10px;
+}
+
+.deleteBtn {
+  margin-top: 30px;
+  margin-left: 80px;
+}
+
+#errorMessage {
+  margin-top: 100px;
+  text-align: center;
+}

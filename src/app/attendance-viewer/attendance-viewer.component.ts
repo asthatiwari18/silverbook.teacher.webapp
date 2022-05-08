@@ -21,7 +21,7 @@ export class AttendenceViewerComponent implements OnInit {
   public college: string = null;
   public branch: string = null;
   public semester: string = null;
-  public isShowTable: boolean =false;
+  public isShowTable: boolean = false;
   private backendurl: string = 'https://mysterious-wave-81851.herokuapp.com';
   constructor(private _formBuilder: FormBuilder, private http: HttpClient) {
     this.dataSource = new MatTableDataSource();
@@ -43,24 +43,24 @@ export class AttendenceViewerComponent implements OnInit {
   }
 
   prepareData(attFromDB: Object) {
-    this.attendanceData=[]
-    this.displayedColumns=[]
+    this.attendanceData = [];
+    this.displayedColumns = [];
     const students = Object.keys(attFromDB);
 
     students.forEach((student, studentInd) => {
-     var studInfo: Object={};
-     studInfo["name"]=student
-     const dates = Object.keys(attFromDB[student])
-     dates.forEach((date, dateInd) => {
-       studInfo[date]=attFromDB[student][date]["status"]
-     })
-     this.attendanceData.push(studInfo);
+      var studInfo: Object = {};
+      studInfo['name'] = student;
+      const dates = Object.keys(attFromDB[student]);
+      dates.forEach((date, dateInd) => {
+        studInfo[date] = attFromDB[student][date]['status'];
+      });
+      this.attendanceData.push(studInfo);
     });
-    console.log(this.attendanceData)
-    for( let v in this.attendanceData[0]) {
+    console.log(this.attendanceData);
+    for (let v in this.attendanceData[0]) {
       this.displayedColumns.push(v);
-   }
-   this.dataSource = new MatTableDataSource<Object>(this.attendanceData);
+    }
+    this.dataSource = new MatTableDataSource<Object>(this.attendanceData);
   }
 
   fetchDataFromDB() {
@@ -84,27 +84,32 @@ export class AttendenceViewerComponent implements OnInit {
         observe: 'response',
       })
       .toPromise()
-      .then((response) => {
-        console.log(response.body);
-        var json = JSON.stringify(response.body);
-        this.prepareData(response.body);
-        console.log("beforeIsShow");
-        this.isShowTable=true;
-        console.log("afterIsShow");
-      },
-      (error)=>{
-        this.handleError(error)
-      }
+      .then(
+        (response) => {
+          this.prepareData(response.body);
+          console.log('beforeIsShow');
+          this.isShowTable = true;
+          console.log('afterIsShow');
+        },
+        (error) => {
+          this.showError(error);
+        }
       )
-      .catch(this.handleError);
+      .catch(this.showError);
   }
 
-  handleError(error: Error){
-   this.isShowTable=false
-   console.log(error)
+  showError(response: any) {
+    this.isShowTable = false;
+    console.log(response.error);
+    var errorDiv = document.getElementById('errorMessage');
+    errorDiv.innerHTML = '<h3>' + response.error + '</h3>';
   }
-
+  deleteError() {
+    var errorDiv = document.getElementById('errorMessage');
+    errorDiv.innerHTML = '';
+  }
   viewAttendance() {
+    this.deleteError();
     this.fetchDataFromDB();
   }
 }

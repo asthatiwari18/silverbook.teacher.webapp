@@ -34,6 +34,7 @@ export class QrGeneratorComponent {
   public semester: string = null;
   public date: string = null;
   public myInterval = null;
+  public timeOut : number= 5000;
   public classNumber: string = null;
   public otp: string = null;
   public qrData = {
@@ -42,7 +43,7 @@ export class QrGeneratorComponent {
     date: '2022-08-12',
     classNumber: '2',
     otp: '123',
-    qrGenTime: 10000,
+    qrTimeout: 10000,
   };
   constructor(private _formBuilder: FormBuilder, private http: HttpClient) {
     this.level = 'H';
@@ -89,7 +90,6 @@ export class QrGeneratorComponent {
   }
 
   updateOTPInDB() {
-    // console.log("start",Date.now())
     let body = new URLSearchParams();
     body.set('college', this.college);
     body.set('branch', this.branch);
@@ -121,8 +121,6 @@ export class QrGeneratorComponent {
         }
       );
   }
-  // start 1651941060313
-  //   end 1651941061336
   // Function to generate OTP
   generateOTP() {
     // Declare a string variable
@@ -144,7 +142,7 @@ export class QrGeneratorComponent {
     this.qrData['otp'] = this.otp;
     this.updateOTPInDB();
     const d = new Date();
-    this.qrData['qrGenTime'] = d.getTime();
+    this.qrData['qrTimeout'] = d.getTime()+this.timeOut;
     this.qrcode = JSON.stringify(this.qrData);
     console.log(this.qrData);
   }
@@ -171,13 +169,13 @@ export class QrGeneratorComponent {
     this.qrData['otp'] = r.toString();
     this.otp = r.toString();
     const d = new Date();
-    this.qrData['qrGenTime'] = d.getTime();
+    this.qrData['qrTimeout'] = d.getTime()+this.timeOut;
     this.qrcode = JSON.stringify(this.qrData);
     this.updateOTPInDB();
     this.sleep(1000);
     if (!this.errorOccured) {
       this.isShowQR = true;
-      this.myInterval = setInterval(this.everyTime, 5000);
+      this.myInterval = setInterval(this.everyTime, this.timeOut);
     }
   }
 

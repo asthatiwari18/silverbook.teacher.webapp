@@ -1,10 +1,10 @@
 <mat-toolbar color="primary">
-  <span>Generate QR-Code</span>
+  <span>View Attendance</span>
 </mat-toolbar>
 
 <div class="container">
   <div class="qrDataForm">
-    <mat-horizontal-stepper [linear]=true #stepper>
+    <mat-horizontal-stepper [linear]="true" #stepper>
       <mat-step [stepControl]="collegeFormGroup">
         <form [formGroup]="collegeFormGroup">
           <ng-template matStepLabel>Enter College</ng-template>
@@ -80,8 +80,7 @@
           </div>
         </form>
       </mat-step>
-     
-    
+
       <mat-step>
         <ng-template matStepLabel>Submit</ng-template>
 
@@ -91,22 +90,24 @@
         </div>
       </mat-step>
     </mat-horizontal-stepper>
-    
   </div>
 
-  <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="isShowTable" >
-
-    <ng-container *ngFor="let disCol of displayedColumns; let colIndex = index" matColumnDef="{{disCol}}">
-        <mat-header-cell *matHeaderCellDef>{{disCol}}</mat-header-cell>
-        <mat-cell *matCellDef="let element "> {{element[disCol]}}
-        </mat-cell>
+  <mat-table
+    #table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8"
+    *ngIf="isShowTable"
+  >
+    <ng-container
+      *ngFor="let disCol of displayedColumns; let colIndex = index"
+      matColumnDef="{{ disCol }}"
+    >
+      <mat-header-cell *matHeaderCellDef>{{ disCol }}</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element[disCol] }} </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns" ></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
- 
-
-  
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <div id="errorMessage"></div>
 </div>
-

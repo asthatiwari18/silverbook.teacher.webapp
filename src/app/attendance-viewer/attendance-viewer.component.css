@@ -9,3 +9,8 @@
 .mat-header-row {
     background: rgb(137, 155, 210)
 }
+
+#errorMessage {
+    margin-top: 60px;
+    text-align: center;
+  }
