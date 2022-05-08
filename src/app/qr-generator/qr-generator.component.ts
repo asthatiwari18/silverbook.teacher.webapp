@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { formatDate } from '@angular/common';
+import { AppComponent } from '../app.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-qr-generator',
@@ -34,7 +36,8 @@ export class QrGeneratorComponent {
   public semester: string = null;
   public date: string = null;
   public myInterval = null;
-  public timeOut : number= 5000;
+  public faculty: string = null;
+  public timeOut: number = 5000;
   public classNumber: string = null;
   public otp: string = null;
   public qrData = {
@@ -45,13 +48,24 @@ export class QrGeneratorComponent {
     otp: '123',
     qrTimeout: 10000,
   };
-  constructor(private _formBuilder: FormBuilder, private http: HttpClient) {
+  constructor(
+    private _formBuilder: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {
     this.level = 'H';
     this.qrcode = '';
     this.width = 256;
   }
   ngOnInit() {
-    
+    const storage = localStorage.getItem('google_auth');
+    if (storage) {
+      var data = JSON.parse(storage);
+      this.faculty = data['email'].replace("@iiita.ac.in","");
+    } else {
+      this.signOut();
+    }
+
     this.qrData['otp'] = this.generateOTP();
     this.firstFormGroup = this._formBuilder.group({
       subCtrl: ['', Validators.required],
@@ -93,7 +107,7 @@ export class QrGeneratorComponent {
     let body = new URLSearchParams();
     body.set('college', this.college);
     body.set('branch', this.branch);
-    body.set('faculty', 'DABB');
+    body.set('faculty', this.faculty);
     body.set('date', formatDate(this.date, 'dd-MM-yyyy', 'en-US'));
     body.set('classCount', this.classNumber);
     body.set('subject', this.subject);
@@ -114,7 +128,6 @@ export class QrGeneratorComponent {
           if (response !== 'QR Updated') {
             this.showError(response);
           }
-          // console.log("end",Date.now())
         },
         (error) => {
           this.showError(error);
@@ -142,7 +155,7 @@ export class QrGeneratorComponent {
     this.qrData['otp'] = this.otp;
     this.updateOTPInDB();
     const d = new Date();
-    this.qrData['qrTimeout'] = d.getTime()+this.timeOut;
+    this.qrData['qrTimeout'] = d.getTime() + this.timeOut;
     this.qrcode = JSON.stringify(this.qrData);
     console.log(this.qrData);
   }
@@ -169,7 +182,7 @@ export class QrGeneratorComponent {
     this.qrData['otp'] = r.toString();
     this.otp = r.toString();
     const d = new Date();
-    this.qrData['qrTimeout'] = d.getTime()+this.timeOut;
+    this.qrData['qrTimeout'] = d.getTime() + this.timeOut;
     this.qrcode = JSON.stringify(this.qrData);
     this.updateOTPInDB();
     this.sleep(1000);
@@ -186,5 +199,10 @@ export class QrGeneratorComponent {
     console.log('deleted QR');
     this.everyTime();
     clearInterval(this.myInterval);
+  }
+
+  signOut(): void {
+    localStorage.removeItem('google_auth');
+    this.router.navigateByUrl('/login').then();
   }
 }

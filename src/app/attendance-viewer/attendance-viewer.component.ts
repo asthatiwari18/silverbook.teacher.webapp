@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-attendance-viewer',
@@ -20,14 +21,23 @@ export class AttendenceViewerComponent implements OnInit {
   public subject: string = null;
   public college: string = null;
   public branch: string = null;
+  public faculty: string =null;
   public semester: string = null;
   public isShowTable: boolean = false;
   private backendurl: string = 'https://mysterious-wave-81851.herokuapp.com';
-  constructor(private _formBuilder: FormBuilder, private http: HttpClient) {
+  constructor(private _formBuilder: FormBuilder, private http: HttpClient, private router: Router) {
     this.dataSource = new MatTableDataSource();
+    
   }
 
   ngOnInit(): void {
+    const storage = localStorage.getItem('google_auth');
+    if (storage) {
+      var data = JSON.parse(storage);
+      this.faculty = data['email'].replace("@iiita.ac.in","");
+    } else {
+      this.signOut();
+    }
     this.firstFormGroup = this._formBuilder.group({
       subCtrl: ['', Validators.required],
     });
@@ -49,11 +59,17 @@ export class AttendenceViewerComponent implements OnInit {
 
     students.forEach((student, studentInd) => {
       var studInfo: Object = {};
-      studInfo['name'] = student;
+      studInfo['Roll no'] = student;
       const dates = Object.keys(attFromDB[student]);
+      var absentCount =0
+      var presentCount= 0
+      studInfo["Attendance Percentage"]=0
       dates.forEach((date, dateInd) => {
         studInfo[date] = attFromDB[student][date]['status'];
+        if(studInfo[date]==='A')absentCount+=1;
+        else presentCount+=1
       });
+      studInfo["Attendance Percentage"]=Math.floor((presentCount*100)/(presentCount+absentCount))
       this.attendanceData.push(studInfo);
     });
     console.log(this.attendanceData);
@@ -64,19 +80,12 @@ export class AttendenceViewerComponent implements OnInit {
   }
 
   fetchDataFromDB() {
-    // // console.log("start",Date.now())
-    // let body = new URLSearchParams();
-    // body.set('college', this.college);
-    // body.set('branch', this.branch);
-    // body.set('faculty', 'DABB');
-    // body.set('subject', this.subject);
-    // body.set('semester', this.semester);
 
     this.http
       .get(this.backendurl + '/faculty/attendance', {
         params: {
           semester: this.semester,
-          faculty: 'DABB',
+          faculty: this.faculty,
           branch: this.branch,
           college: this.college,
           subject: this.subject,
@@ -87,9 +96,7 @@ export class AttendenceViewerComponent implements OnInit {
       .then(
         (response) => {
           this.prepareData(response.body);
-          console.log('beforeIsShow');
           this.isShowTable = true;
-          console.log('afterIsShow');
         },
         (error) => {
           this.showError(error);
@@ -111,5 +118,9 @@ export class AttendenceViewerComponent implements OnInit {
   viewAttendance() {
     this.deleteError();
     this.fetchDataFromDB();
+  }
+  signOut(): void {
+    localStorage.removeItem('google_auth');
+    this.router.navigateByUrl('/login').then();
   }
 }
