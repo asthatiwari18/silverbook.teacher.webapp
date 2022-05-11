@@ -1,0 +1,27 @@
+
+<div class="container-fluid">
+
+    <div class="custom-card">
+      <div id="badCredentials"></div>
+      <div class="form-group">
+        <input type="email"
+               placeholder="Enter email address"
+               class="form-control" [(ngModel)]="email"
+               required
+        />
+      </div>
+  
+      <div class="form-group">
+        <input type="password"
+               placeholder="Enter password"
+               class="form-control" [(ngModel)]="password"
+               required
+        />
+      </div>
+  
+      <button class="btn btn-block btn-primary" (click)="signInHandler()">Login</button>
+  
+  
+    </div>
+  
+  </div>
